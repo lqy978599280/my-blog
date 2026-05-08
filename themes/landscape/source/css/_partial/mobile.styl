@@ -1,0 +1,22 @@
+@media mq-mobile
+  #mobile-nav
+    position: absolute
+    top: 0
+    left: 0
+    width: mobile-nav-width
+    height: 100%
+    background: color-mobile-nav-background
+    border-right: 1px solid color-border
+
+@media mq-mobile
+  .mobile-nav-link
+    display: block
+    color: color-grey
+    text-decoration: none
+    padding: 15px 20px
+    font-weight: 500
+    letter-spacing: 1px
+    transition: color 0.3s, background 0.3s
+    &:hover
+      color: color-accent-cyan
+      background: rgba(0, 240, 255, 0.03)

@@ -1,0 +1,103 @@
+$block-caption
+  text-decoration: none
+  text-transform: uppercase
+  letter-spacing: 3px
+  color: color-accent-cyan
+  margin-bottom: 1em
+  margin-left: 5px
+  line-height: 1em
+  font-weight: 600
+  font-size: 0.8em
+  opacity: 0.8
+
+$block
+  background: color-card-bg
+  border: 1px solid color-card-border
+  border-radius: 12px
+  backdrop-filter: blur(12px)
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 8px 32px rgba(0, 240, 255, 0.08)
+    border-color: rgba(0, 240, 255, 0.15)
+
+$base-style
+  h1
+    font-size: 2em
+    font-weight: 700
+    color: #fff
+  h2
+    font-size: 1.5em
+    font-weight: 700
+    color: #fff
+    position: relative
+    padding-left: 16px
+    &:before
+      content: ""
+      position: absolute
+      left: 0
+      top: 0.15em
+      width: 4px
+      height: 1em
+      background: linear-gradient(180deg, color-accent-cyan, color-accent-purple)
+      border-radius: 2px
+  h3
+    font-size: 1.3em
+    font-weight: 600
+    color: #f1f5f9
+  h4
+    font-size: 1.2em
+    font-weight: 600
+    color: #f1f5f9
+  h5
+    font-size: 1em
+    font-weight: 600
+    color: #f1f5f9
+  h6
+    font-size: 1em
+    color: color-grey
+  hr
+    border: none
+    height: 1px
+    background: linear-gradient(90deg, transparent, color-border, transparent)
+    margin: 2em 0
+  strong
+    font-weight: 700
+    color: #fff
+  em, cite
+    font-style: italic
+  sup, sub
+    font-size: 0.75em
+    line-height: 0
+    position: relative
+    vertical-align: baseline
+  sup
+    top: -0.5em
+  sub
+    bottom: -0.2em
+  small
+    font-size: 0.85em
+  acronym, abbr
+    border-bottom: 1px dotted
+  ul, ol, dl
+    margin: 0 20px
+    line-height: line-height
+  ul, ol
+    ul, ol
+      margin-top: 0
+      margin-bottom: 0
+  ul
+    list-style: disc
+  ol
+    list-style: decimal
+  dt
+    font-weight: bold
+
+$glow-box
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.03)
+
+$gradient-text
+  background: linear-gradient(135deg, color-accent-cyan, color-accent-purple)
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+  background-clip: text

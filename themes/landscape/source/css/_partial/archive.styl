@@ -1,0 +1,99 @@
+.archives-wrap
+  margin: block-margin 0
+
+.archives
+  clearfix()
+
+.archive-year-wrap
+  margin-bottom: 1em
+
+.archive-year
+  @extend $block-caption
+  font-size: 1.5em
+  font-weight: 700
+  color: #fff
+  letter-spacing: 2px
+  background: linear-gradient(135deg, color-accent-cyan, color-accent-purple)
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+  background-clip: text
+
+.archives
+  column-gap: 10px
+  @media mq-tablet
+    column-count: 2
+  @media mq-normal
+    column-count: 3
+
+.archive-article
+  avoid-column-break()
+  opacity: 0
+  transform: translateY(20px)
+  transition: opacity 0.5s ease, transform 0.5s ease
+  &.revealed
+    opacity: 1
+    transform: translateY(0)
+
+.archive-article-inner
+  @extend $block
+  padding: 16px
+  margin-bottom: 15px
+  @extend $glow-box
+
+.archive-article-title
+  text-decoration: none
+  font-weight: 600
+  color: #f1f5f9
+  transition: color 0.3s
+  line-height: line-height
+  &:hover
+    color: color-accent-cyan
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.2)
+
+.archive-article-footer
+  margin-top: 1em
+
+.archive-article-date
+  color: color-accent-cyan
+  text-decoration: none
+  font-size: 0.85em
+  line-height: 1em
+  margin-bottom: 0.5em
+  display: block
+  opacity: 0.7
+  letter-spacing: 1px
+
+#page-nav
+  clearfix()
+  margin: block-margin auto
+  background: color-card-bg
+  border: 1px solid color-card-border
+  border-radius: 12px
+  text-align: center
+  color: color-grey
+  overflow: hidden
+  a, span
+    padding: 12px 24px
+    line-height: 1
+    height: 2ex
+  a
+    color: color-grey
+    text-decoration: none
+    transition: all 0.3s ease
+    &:hover
+      background: rgba(0, 240, 255, 0.1)
+      color: color-accent-cyan
+  .prev
+    float: left
+  .next
+    float: right
+  .page-number
+    display: inline-block
+    @media mq-mobile
+      display: none
+  .current
+    color: color-accent-cyan
+    font-weight: bold
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.3)
+  .space
+    color: color-border

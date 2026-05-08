@@ -1,0 +1,27 @@
+#footer
+  background: color-footer-background
+  padding: 60px 0
+  border-top: 1px solid color-border
+  color: color-grey
+  position: relative
+  &:before
+    content: ""
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    height: 1px
+    background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.2), transparent)
+  a
+    color: color-accent-cyan
+    text-decoration: none
+    transition: color 0.3s, text-shadow 0.3s
+    &:hover
+      color: color-accent-purple
+      text-shadow: 0 0 8px rgba(179, 136, 255, 0.3)
+
+#footer-info
+  line-height: line-height
+  font-size: 0.85em
+  text-align: center
+  opacity: 0.7

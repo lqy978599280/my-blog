@@ -1,0 +1,199 @@
+#header
+  height: banner-height
+  position: relative
+  border-bottom: 1px solid color-border
+  overflow: hidden
+  &:before
+    content: ""
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background: linear-gradient(180deg, rgba(10, 14, 23, 0.3) 0%, rgba(10, 14, 23, 0.7) 100%)
+    z-index: 1
+  &:after
+    content: ""
+    position: absolute
+    bottom: 0
+    left: 0
+    right: 0
+    height: 120px
+    background: linear-gradient(transparent, color-background)
+    z-index: 1
+
+#header-outer
+  height: 100%
+  position: relative
+
+#header-inner
+  position: relative
+  overflow: hidden
+  z-index: 2
+
+#banner
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background: url(banner-url) center #000
+  background-size: cover
+  z-index: 0
+  filter: brightness(0.4) saturate(1.3)
+
+#particles-canvas
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  z-index: 1
+  pointer-events: none
+
+#header-title
+  text-align: center
+  height: logo-size
+  position: absolute
+  top: 50%
+  left: 0
+  margin-top: logo-size * -0.5
+  z-index: 2
+
+$logo-text
+  text-decoration: none
+  color: #fff
+  font-weight: 700
+  text-shadow: 0 0 40px rgba(0, 240, 255, 0.3), 0 2px 10px rgba(0, 0, 0, 0.5)
+
+#logo
+  @extend $logo-text
+  font-size: logo-size
+  line-height: logo-size
+  letter-spacing: 4px
+  background: linear-gradient(135deg, #fff, color-accent-cyan)
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+  background-clip: text
+
+#subtitle
+  @extend $logo-text
+  font-size: subtitle-size
+  line-height: subtitle-size
+  letter-spacing: 2px
+  opacity: 0.7
+  -webkit-text-fill-color: #fff
+
+#subtitle-wrap
+  margin-top: subtitle-size
+
+#main-nav
+  float: left
+  margin-left: -15px
+
+$nav-link
+  float: left
+  color: #fff
+  opacity: 0.5
+  text-decoration: none
+  text-shadow: 0 1px rgba(0, 0, 0, 0.2)
+  transition: opacity 0.3s, color 0.3s
+  display: block
+  padding: 20px 15px
+  font-weight: 500
+  letter-spacing: 1px
+  position: relative
+  &:hover
+    opacity: 1
+    color: color-accent-cyan
+  &:after
+    content: ""
+    position: absolute
+    bottom: 12px
+    left: 15px
+    right: 15px
+    height: 2px
+    background: color-accent-cyan
+    transform: scaleX(0)
+    transition: transform 0.3s ease
+    border-radius: 1px
+  &:hover:after
+    transform: scaleX(1)
+
+.nav-icon
+  @extend $nav-link
+  text-align: center
+  font-size: font-size
+  width: font-size
+  height: font-size
+  padding: 20px 15px
+  position: relative
+  cursor: pointer
+  &:after
+    display: none
+
+.main-nav-link
+  @extend $nav-link
+  font-weight: 500
+  letter-spacing: 1px
+  @media mq-mobile
+    display: none
+
+#main-nav-toggle
+  display: none
+  @media mq-mobile
+    display: block
+
+#sub-nav
+  float: right
+  margin-right: -15px
+
+#search-form-wrap
+  position: absolute
+  top: 15px
+  width: 150px
+  height: 30px
+  right: -150px
+  opacity: 0
+  transition: 0.3s ease-out
+  &.on
+    opacity: 1
+    right: 0
+  @media mq-mobile
+    width: 100%
+    right: -100%
+
+.search-form
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  background: rgba(17, 24, 39, 0.9)
+  padding: 5px 15px
+  border-radius: 20px
+  border: 1px solid color-card-border
+  backdrop-filter: blur(12px)
+
+.search-form-input
+  border: none
+  background: none
+  color: color-default
+  width: 100%
+  font: 13px font-sans
+  outline: none
+  &::-webkit-search-results-decoration
+  &::-webkit-search-cancel-button
+    -webkit-appearance: none
+
+.search-form-submit
+  position: absolute
+  top: 50%
+  right: 10px
+  margin-top: -7px
+  font: 13px font-icon
+  border: none
+  background: none
+  color: color-accent-cyan
+  cursor: pointer
+  &:hover, &:focus
+    color: color-accent-purple

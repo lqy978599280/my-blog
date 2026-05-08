@@ -1,0 +1,33 @@
+#sidebar
+  @media mq-normal
+    column(sidebar-column)
+
+.widget-wrap
+  margin: block-margin 0
+
+.widget-title
+  @extend $block-caption
+  font-size: 0.85em
+
+.widget
+  color: color-sidebar-text
+  background: color-card-bg
+  border: 1px solid color-card-border
+  padding: 20px
+  border-radius: 12px
+  margin-bottom: 20px
+  backdrop-filter: blur(12px)
+  transition: border-color 0.3s ease
+  &:hover
+    border-color: rgba(0, 240, 255, 0.12)
+  a
+    color: color-sidebar-text
+    text-decoration: none
+    transition: color 0.3s
+    &:hover
+      color: color-accent-cyan
+      text-decoration: none
+  ul, ol, dl
+    ul, ol, dl
+      margin-left: 15px
+      list-style: disc
