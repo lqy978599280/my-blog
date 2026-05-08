@@ -1,38 +1,49 @@
 ---
-title: Hello World
+title: 你好，世界！我的第一篇博客
+date: 2026-05-08 12:00:00
+tags:
+  - 博客
+  - AI
+categories:
+  - 随笔
 ---
-Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [documentation](https://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [troubleshooting](https://hexo.io/docs/troubleshooting.html) or you can ask me on [GitHub](https://github.com/hexojs/hexo/issues).
 
-## Quick Start
+## 开篇
 
-### Create a new post
+你好，欢迎来到我的博客！这是一个记录 AI 使用与学习过程的个人空间。
 
-``` bash
-$ hexo new "My New Post"
+最近人工智能技术飞速发展，从 ChatGPT 到 Claude，从 Midjourney 到 Stable Diffusion，各种 AI 工具正在深刻改变我们的工作和生活方式。作为一个 AI 爱好者，我决定建立这个博客，记录我在探索 AI 世界中的所见所闻、所思所想。
+
+## 为什么写这个博客？
+
+1. **记录学习过程** — 将零散的知识系统化，写作是最好的学习方式
+2. **分享实践经验** — 希望我的使用心得能帮助到同样在探索 AI 的朋友
+3. **建立知识库** — 方便日后回顾和查阅
+
+## 这个博客会写什么？
+
+- AI 工具的使用教程和技巧
+- Prompt Engineering 的学习笔记
+- AI 在实际项目中的应用案例
+- 技术思考和个人见解
+
+## 关于建站
+
+这个博客使用 [Hexo](https://hexo.io/) 搭建，部署在 GitHub Pages 上。选择 Hexo 的原因是它简单、快速，而且有丰富的主题和插件支持。
+
+```bash
+# 安装 Hexo
+npm install -g hexo-cli
+
+# 创建新博客
+hexo init my-blog
+
+# 本地预览
+hexo server
 ```
 
-More info: [Writing](https://hexo.io/docs/writing.html)
+## 结语
 
-### Run server
+技术的世界永远充满惊喜，让我们一起在 AI 的浪潮中学习、成长。
 
-``` bash
-$ hexo server
-```
-
-More info: [Server](https://hexo.io/docs/server.html)
-
-### Generate static files
-
-``` bash
-$ hexo generate
-```
-
-More info: [Generating](https://hexo.io/docs/generating.html)
-
-### Deploy to remote sites
-
-``` bash
-$ hexo deploy
-```
-
-More info: [Deployment](https://hexo.io/docs/one-command-deployment.html)
+感谢你的阅读，我们下篇文章再见！
