@@ -32,7 +32,7 @@ jobs:
           cache: 'pnpm'
 
       - run: pnpm install
-      - run: cp -r node_modules/hexo-theme-landscape themes/landscape
+      - run: mkdir -p themes && cp -r node_modules/hexo-theme-landscape themes/landscape
       - run: npx hexo generate
 
       - uses: actions/upload-pages-artifact@v3
