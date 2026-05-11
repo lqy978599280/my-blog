@@ -109,7 +109,7 @@ var bodyScript = '<script>\n' +
 '  }\n' +
 '\n' +
 '  function escapeRegex(str) {\n' +
-'    return str.replace(/[\\\\^$.*+?()[\\]{}|]/g, "\\\\$&");\n' +
+'    return str.replace(/[\\\\^$.*+?()[\\]{}|]/g, "\\\\$$&");\n' +
 '  }\n' +
 '\n' +
 '  function highlightText(text, keyword) {\n' +
