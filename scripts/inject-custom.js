@@ -185,7 +185,7 @@ var bodyScript = '<script>\n' +
 '  if (searchBtn) {\n' +
 '    searchBtn.addEventListener("click", function(e) {\n' +
 '      e.preventDefault();\n' +
-'      e.stopPropagation();\n' +
+'      e.stopImmediatePropagation();\n' +
 '      openSearch();\n' +
 '    });\n' +
 '  }\n' +
@@ -209,10 +209,13 @@ function processDir(dir) {
   }
 }
 
-var publicDir = path.join(process.cwd(), 'public');
-if (fs.existsSync(publicDir)) {
-  processDir(publicDir);
-  console.log('[inject] Custom styles, animations and search UI injected.');
-} else {
-  console.log('[inject] public directory not found.');
+// Only run when executed directly (not when loaded by Hexo)
+if (require.main === module) {
+  var publicDir = path.join(process.cwd(), 'public');
+  if (fs.existsSync(publicDir)) {
+    processDir(publicDir);
+    console.log('[inject] Custom styles, animations and search UI injected.');
+  } else {
+    console.log('[inject] public directory not found.');
+  }
 }
