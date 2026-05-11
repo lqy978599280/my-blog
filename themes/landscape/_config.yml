@@ -4,7 +4,6 @@
 menu:
   首页: /
   归档: /archives
-rss: /atom.xml
 banner: "images/banner.jpg"
 subtitle:
 links:
