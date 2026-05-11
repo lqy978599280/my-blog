@@ -150,7 +150,7 @@ var bodyScript = '<script>\n' +
 '    var html = "";\n' +
 '    for (var j = 0; j < matches.length; j++) {\n' +
 '      var m = matches[j];\n' +
-'      html += \'<div class="search-result-item" onclick="window.location.href=\'\\\'\' + m.url + \'\\\'">\' +\n' +
+'      html += \'<div class="search-result-item" data-url="\' + m.url + \'">\' +\n' +
 '        \'<div class="search-result-title">\' + highlightText(m.title, keyword) + \'</div>\' +\n' +
 '        \'<div class="search-result-snippet">\' + highlightText(m.snippet, keyword) + \'</div>\' +\n' +
 '        (m.date ? \'<div class="search-result-meta">\' + m.date + \'</div>\' : "") +\n' +
@@ -177,6 +177,10 @@ var bodyScript = '<script>\n' +
 '  }\n' +
 '\n' +
 '  input.addEventListener("input", function() { doSearch(this.value.trim()); });\n' +
+'  results.addEventListener("click", function(e) {\n' +
+'    var item = e.target.closest(".search-result-item");\n' +
+'    if (item && item.dataset.url) window.location.href = item.dataset.url;\n' +
+'  });\n' +
 '  overlay.addEventListener("click", function(e) { if (e.target === overlay) closeSearch(); });\n' +
 '  document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeSearch(); });\n' +
 '\n' +
