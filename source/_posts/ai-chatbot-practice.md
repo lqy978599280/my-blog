@@ -25,8 +25,6 @@ categories:
 
 先看看最终效果：
 
-![AI 助手预览](/my-blog/images/ai-chatbot-preview.png)
-
 功能特性：
 - 右下角悬浮聊天按钮，带呼吸动画
 - 点击打开聊天窗口，支持 Escape 键关闭

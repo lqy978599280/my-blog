@@ -316,11 +316,19 @@ var bodyScript = '<script>\n' +
 // Scroll Reveal
 '(function() {\n' +
 '  var els = document.querySelectorAll(".article, .archive-article");\n' +
-'  for (var i = 0; i < els.length; i++) els[i].classList.add("animating");\n' +
+'  for (var i = 0; i < els.length; i++) {\n' +
+'    els[i].classList.add("animating");\n' +
+'    els[i].style.opacity = "0";\n' +
+'    els[i].style.transform = "translateY(30px)";\n' +
+'  }\n' +
 '  requestAnimationFrame(function() {\n' +
 '    for (var i = 0; i < els.length; i++) {\n' +
 '      var rect = els[i].getBoundingClientRect();\n' +
-'      if (rect.top < window.innerHeight - 100) els[i].classList.add("revealed");\n' +
+'      if (rect.top < window.innerHeight - 100) {\n' +
+'        els[i].classList.add("revealed");\n' +
+'        els[i].style.opacity = "1";\n' +
+'        els[i].style.transform = "translateY(0)";\n' +
+'      }\n' +
 '    }\n' +
 '  });\n' +
 '  var ticking = false;\n' +
@@ -329,7 +337,11 @@ var bodyScript = '<script>\n' +
 '      for (var i = 0; i < els.length; i++) {\n' +
 '        if (!els[i].classList.contains("revealed")) {\n' +
 '          var rect = els[i].getBoundingClientRect();\n' +
-'          if (rect.top < window.innerHeight - 100) els[i].classList.add("revealed");\n' +
+'          if (rect.top < window.innerHeight - 100) {\n' +
+'            els[i].classList.add("revealed");\n' +
+'            els[i].style.opacity = "1";\n' +
+'            els[i].style.transform = "translateY(0)";\n' +
+'          }\n' +
 '        }\n' +
 '      }\n' +
 '      ticking = false;\n' +
@@ -467,7 +479,7 @@ function processDir(dir) {
       processDir(fullPath);
     } else if (entry.name.endsWith('.html')) {
       var content = fs.readFileSync(fullPath, 'utf8');
-      if (content.indexOf('ai-chat-widget') !== -1) continue;
+      if (content.indexOf('id="ai-chat-widget"') !== -1) continue;
       content = content.replace(/<\/head>/, headCSS + '\n</head>');
       content = content.replace(/<\/body>/, '\n' + chatWidgetHTML + '\n' + bodyScript + '\n</body>');
       fs.writeFileSync(fullPath, content, 'utf8');
