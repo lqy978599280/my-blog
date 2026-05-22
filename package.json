@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "hexo generate && node scripts/inject-custom.js",
+    "vite:build": "vite build && node -e \"const fs=require('fs');const path=require('path');const src='dist/widgets';const dest='public/js/widgets';if(!fs.existsSync(dest))fs.mkdirSync(dest,{recursive:true});fs.readdirSync(src).forEach(f=>fs.copyFileSync(path.join(src,f),path.join(dest,f)));console.log('Copied widgets to public/js/widgets');\"",
+    "build": "pnpm vite:build && hexo generate && node scripts/inject-custom.js",
     "clean": "hexo clean",
     "deploy": "hexo deploy",
     "server": "hexo server"
@@ -22,6 +23,12 @@
     "hexo-renderer-marked": "^7.0.0",
     "hexo-renderer-stylus": "^3.0.1",
     "hexo-server": "^3.0.0",
-    "hexo-theme-landscape": "^1.0.0"
+    "hexo-theme-landscape": "^1.0.0",
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "terser": "^5.48.0",
+    "vite": "^5.0.0"
   }
 }
