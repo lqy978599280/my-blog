@@ -28,10 +28,15 @@ function processDir(dir) {
     } else if (entry.name.endsWith('.html')) {
       var content = fs.readFileSync(fullPath, 'utf8');
 
-      // 检查是否已经注入过
-      if (content.indexOf('<!-- Vue3 Blog Widgets Injected -->') !== -1) {
+      // 检查是否已经注入过（使用正确的路径检查）
+      if (content.indexOf('href="/my-blog/js/widgets/blog-widgets.css"') !== -1) {
         continue;
       }
+
+      // 移除旧的注入标记（如果有）
+      content = content.replace(/<!-- Vue3 Blog Widgets Injected -->\n/g, '');
+      content = content.replace(/<link rel="stylesheet" href="\/js\/widgets\/blog-widgets\.css">\n/g, '');
+      content = content.replace(/<script src="\/js\/widgets\/blog-widgets\.js"><\/script>\n/g, '');
 
       // 注入 Google Fonts 到 <head>
       content = content.replace(/<\/head>/, headCSS + '\n</head>');

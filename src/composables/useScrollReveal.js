@@ -16,8 +16,6 @@ export function useScrollReveal() {
     // 为每个元素添加初始隐藏状态
     for (const el of elements) {
       el.classList.add('animating');
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(30px)';
     }
 
     // 使用 Intersection Observer 实现滚动检测
@@ -26,8 +24,6 @@ export function useScrollReveal() {
         for (const entry of entries) {
           if (entry.isIntersecting) {
             entry.target.classList.add('revealed');
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
             observer.unobserve(entry.target);
           }
         }
@@ -50,8 +46,6 @@ export function useScrollReveal() {
         const rect = el.getBoundingClientRect();
         if (rect.top < window.innerHeight - 100) {
           el.classList.add('revealed');
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
           observer.unobserve(el);
         }
       }

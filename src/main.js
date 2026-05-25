@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import ParticleCanvas from './components/ParticleCanvas.vue';
 import AiChat from './components/AiChat.vue';
 import SearchPanel from './components/SearchPanel.vue';
+import BackToTop from './components/BackToTop.vue';
 import { useScrollReveal } from './composables/useScrollReveal.js';
 import './styles/global.css';
 
@@ -30,6 +31,12 @@ function initBlogWidgets() {
   searchContainer.id = 'search-panel-app';
   document.body.appendChild(searchContainer);
   createApp(SearchPanel).mount(searchContainer);
+
+  // 初始化回到顶部按钮
+  const backToTopContainer = document.createElement('div');
+  backToTopContainer.id = 'back-to-top-app';
+  document.body.appendChild(backToTopContainer);
+  createApp(BackToTop).mount(backToTopContainer);
 
   // 初始化滚动动效
   useScrollReveal();

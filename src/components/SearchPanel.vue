@@ -57,7 +57,9 @@ async function loadSearchData() {
   searchLoaded.value = true;
 
   try {
-    const response = await fetch('/my-blog/search.json');
+    // 从当前页面URL推断根路径，兼容本地开发和线上部署
+    const base = document.baseURI.replace(/\/[^\/]*$/, '/');
+    const response = await fetch(base + 'search.json');
     if (response.ok) {
       searchData.value = await response.json();
     }
