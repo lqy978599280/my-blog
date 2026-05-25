@@ -940,7 +940,8 @@ async function main() {
   // ==========================================================
   // 写入文件
   // ==========================================================
-  const outputPath = "d:/ToolWorkspace/my-blog/ai-blog-intro.pptx";
+  const path = require("path");
+  const outputPath = path.resolve(__dirname, "../ai-blog-intro.pptx");
   await pres.writeFile({ fileName: outputPath });
   console.log(`PPT 已生成: ${outputPath}`);
 }

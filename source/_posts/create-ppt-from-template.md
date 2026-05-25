@@ -184,7 +184,7 @@ stages.forEach((stage, i) => {
 await pres.writeFile({ fileName: "ai-blog-intro.pptx" });
 ```
 
-完整代码已放在项目的 `scripts/create-pptx.js` 文件中，运行 `node scripts/create-pptx.js` 即可生成。
+完整代码已放在项目的 `tools/create-pptx.js` 文件中，运行 `node tools/create-pptx.js` 即可生成。
 
 ---
 
@@ -295,4 +295,4 @@ pnpm add pptxgenjs → 编写生成脚本（坐标定位 + 样式配置）→ no
 - [PptxGenJS 官方文档](https://gitbrent.github.io/PptxGenJS/)
 - [PptxGenJS API 参考](https://gitbrent.github.io/PptxGenJS/docs/api-text/)
 - 本文配套的PPT文件：`ai-blog-intro.pptx`
-- 完整代码：`scripts/create-pptx.js`
+- 完整代码：`tools/create-pptx.js`
