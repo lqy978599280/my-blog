@@ -698,7 +698,22 @@ onUnmounted(() => {
   fill: white;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 767px) {
+  .ai-chat-widget {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .chat-btn {
+    width: 48px;
+    height: 48px;
+  }
+
+  .chat-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+
   .chat-window {
     width: calc(100vw - 32px);
     height: calc(100vh - 100px);

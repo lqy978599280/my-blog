@@ -120,7 +120,7 @@ onUnmounted(() => {
 /* 移动端适配 */
 @media (max-width: 767px) {
   .back-to-top-widget {
-    bottom: 88px;
+    bottom: 80px;
     right: 16px;
   }
 
