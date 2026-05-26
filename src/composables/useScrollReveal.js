@@ -13,16 +13,12 @@ export function useScrollReveal() {
       return;
     }
 
-    // 为每个元素添加初始隐藏状态
-    for (const el of elements) {
-      el.classList.add('animating');
-    }
-
     // 使用 Intersection Observer 实现滚动检测
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
+            entry.target.classList.remove('animating');
             entry.target.classList.add('revealed');
             observer.unobserve(entry.target);
           }
@@ -30,26 +26,24 @@ export function useScrollReveal() {
       },
       {
         root: null,
-        rootMargin: '0px 0px -100px 0px',
-        threshold: 0.1
+        rootMargin: '0px 0px -50px 0px',
+        threshold: 0.05
       }
     );
 
-    // 观察所有元素
+    // 立即检查视口内的元素，其余添加 animating 类
+    const viewportHeight = window.innerHeight;
     for (const el of elements) {
-      observer.observe(el);
-    }
-
-    // 立即检查视口内的元素
-    requestAnimationFrame(() => {
-      for (const el of elements) {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight - 100) {
-          el.classList.add('revealed');
-          observer.unobserve(el);
-        }
+      const rect = el.getBoundingClientRect();
+      if (rect.top < viewportHeight - 50) {
+        // 已在视口内，直接显示
+        el.classList.add('revealed');
+      } else {
+        // 不在视口，添加隐藏状态并观察
+        el.classList.add('animating');
+        observer.observe(el);
       }
-    });
+    }
   }
 
   // 等待 DOM 更新后初始化
