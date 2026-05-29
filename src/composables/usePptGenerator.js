@@ -9,11 +9,33 @@ var API_KEY = 'tp-ck566wwq6qo6295enlcmm5ud565ej0dcaiw7i5qmw3upl3gp';
 var MODEL = 'mimo-v2.5';
 
 var SYSTEM_PROMPT = [
-  '你是一个PPT设计师。根据用户要求，直接输出一个JSON对象（不要markdown代码块，不要解释）。',
-  '坐标单位：英寸。16:9画布=10x5.625。颜色6位hex无#号。',
-  'JSON格式：{"title":"标题","theme":{"bgColor":"0F1629","cardColor":"1E293B","primaryColor":"3B82F6","secondaryColor":"06B6D4","accentColor":"10B981","textColor":"FFFFFF","mutedColor":"94A3B8"},"slides":[{"background":"0F1629","elements":[{"type":"title","text":"...","x":0.5,"y":0.3,"w":9,"h":0.7,"fontSize":32,"color":"FFFFFF","bold":true},{"type":"text","text":"...","x":0.5,"y":1.3,"w":4.2,"h":3,"fontSize":14,"color":"CBD5E1","lineSpacingMultiple":1.5},{"type":"bullet","items":["要点1","要点2"],"x":0.8,"y":2,"w":3.6,"h":2.5,"fontSize":14,"color":"CBD5E1","lineSpacingMultiple":1.8},{"type":"shape","shape":"rect","x":0,"y":0,"w":10,"h":0.04,"fill":"3B82F6"},{"type":"card","x":0.5,"y":1.3,"w":4.2,"h":3,"fill":"1E293B","accentColor":"06B6D4"}]}]}',
-  '元素类型：title(大标题),text(正文),bullet(列表items数组),shape(形状),card(卡片+左侧彩条)',
-  '要求：第一页封面，最后一页总结，内容页加页码x:8.5,y:5.25，卡片左侧加0.06宽彩条，边距0.5。'
+  '你是一个PPT设计师。直接输出JSON，不要markdown代码块，不要解释文字。',
+  '',
+  '【格式要求】',
+  '- 16:9画布：10×5.625英寸',
+  '- 颜色：6位hex，禁止#前缀（如"FF0000"不是"#FF0000"）',
+  '- 阴影用opacity属性，不要写8位hex颜色（会损坏文件）',
+  '- 列表用items数组，不要用unicode符号•',
+  '',
+  '【JSON结构】',
+  '{"title":"标题","theme":{"bgColor":"背景色","cardColor":"卡片色","primaryColor":"主色","secondaryColor":"辅色","accentColor":"强调色","textColor":"文字色","mutedColor":"次要文字色"},"slides":[{"background":"背景色","elements":[元素数组]}]}',
+  '',
+  '【元素类型】',
+  '- title: {"type":"title","text":"...","x":0.5,"y":0.3,"w":9,"h":0.7,"fontSize":32,"color":"FFFFFF","bold":true}',
+  '- text: {"type":"text","text":"...","x":0.5,"y":1.3,"w":9,"h":2,"fontSize":14,"color":"CBD5E1","lineSpacingMultiple":1.5}',
+  '- bullet: {"type":"bullet","items":["要点1","要点2"],"x":0.8,"y":2,"w":8,"h":2.5,"fontSize":14,"color":"CBD5E1","lineSpacingMultiple":1.8}',
+  '- shape: {"type":"shape","shape":"rect","x":0,"y":0,"w":10,"h":0.04,"fill":"3B82F6"}',
+  '- card: {"type":"card","x":0.5,"y":1.3,"w":4.2,"h":3,"fill":"1E293B","accentColor":"06B6D4"}',
+  '',
+  '【设计规范】',
+  '- 第一页封面（大标题+装饰），最后一页总结',
+  '- 内容页每页加页码：{"type":"text","text":"N/总数","x":8.5,"y":5.25,"w":1.2,"h":0.3,"fontSize":10,"color":"94A3B8","align":"center"}',
+  '- 卡片左侧加0.06宽彩条装饰',
+  '- 标题36-44pt，正文14-16pt，页码10pt',
+  '- 边距0.5英寸，间距0.3-0.5英寸',
+  '- 每页必须有视觉元素（形状、卡片），不要纯文字',
+  '- 避免重复相同布局，变化列数和卡片排列',
+  '- 颜色要匹配主题，不要默认蓝色'
 ].join('\n');
 
 var DEFAULT_THEME = {
@@ -179,9 +201,23 @@ function validateSlideJson(data) {
 }
 
 /**
+ * 创建阴影对象（工厂函数，避免对象复用导致文件损坏）
+ */
+function makeShadow() {
+  return {
+    type: 'outer',
+    color: '000000',
+    blur: 6,
+    offset: 2,
+    angle: 135,
+    opacity: 0.15
+  };
+}
+
+/**
  * 渲染单个元素到幻灯片
  */
-function renderElement(slide, el, theme) {
+function renderElement(slide, el, theme, pres) {
   switch (el.type) {
     case 'title':
     case 'text':
@@ -219,7 +255,7 @@ function renderElement(slide, el, theme) {
         y: el.y,
         w: el.w,
         h: el.h,
-        fontSize: el.fontSize || 12,
+        fontSize: el.fontSize || 14,
         fontFace: el.fontFace || 'Microsoft YaHei',
         color: el.color || theme.mutedColor,
         lineSpacingMultiple: el.lineSpacingMultiple || 1.5,
@@ -228,35 +264,27 @@ function renderElement(slide, el, theme) {
       break;
 
     case 'shape':
-      slide.addShape(el.shape || 'rect', {
+      slide.addShape(pres.shapes.RECTANGLE, {
         x: el.x,
         y: el.y,
         w: el.w,
         h: el.h,
-        fill: { color: el.fill || theme.primaryColor },
-        rectRadius: el.rectRadius || 0
+        fill: { color: el.fill || theme.primaryColor }
       });
       break;
 
     case 'card':
-      // 卡片背景
-      slide.addShape('rect', {
+      // 卡片背景（使用工厂函数创建阴影，避免对象复用）
+      slide.addShape(pres.shapes.RECTANGLE, {
         x: el.x,
         y: el.y,
         w: el.w,
         h: el.h,
         fill: { color: el.fill || theme.cardColor },
-        shadow: {
-          type: 'outer',
-          color: '000000',
-          blur: 8,
-          offset: 3,
-          angle: 135,
-          opacity: 0.25
-        }
+        shadow: makeShadow()
       });
       // 左侧彩色装饰条
-      slide.addShape('rect', {
+      slide.addShape(pres.shapes.RECTANGLE, {
         x: el.x,
         y: el.y,
         w: 0.06,
@@ -266,10 +294,10 @@ function renderElement(slide, el, theme) {
       break;
 
     case 'image':
-      // 图片元素（template引用上传的图片）
+      // 图片元素
       if (el.src === 'template' && el._imageData) {
         slide.addImage({
-          data: 'image/jpeg;base64,' + el._imageData,
+          data: 'image/png;base64,' + el._imageData,
           x: el.x,
           y: el.y,
           w: el.w,
@@ -312,7 +340,7 @@ function generatePpt(slideData, templateImageBase64, onStatus) {
     // 渲染所有元素
     for (var j = 0; j < slideDef.elements.length; j++) {
       var el = slideDef.elements[j];
-      renderElement(slide, el, theme);
+      renderElement(slide, el, theme, pres);
     }
 
     // 自动添加页码（封面和结尾页除外）
