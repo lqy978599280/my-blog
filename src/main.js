@@ -3,6 +3,7 @@ import ParticleCanvas from './components/ParticleCanvas.vue';
 import AiChat from './components/AiChat.vue';
 import SearchPanel from './components/SearchPanel.vue';
 import BackToTop from './components/BackToTop.vue';
+import PptGenerator from './components/PptGenerator.vue';
 import { useScrollReveal } from './composables/useScrollReveal.js';
 import './styles/global.css';
 
@@ -37,6 +38,12 @@ function initBlogWidgets() {
   backToTopContainer.id = 'back-to-top-app';
   document.body.appendChild(backToTopContainer);
   createApp(BackToTop).mount(backToTopContainer);
+
+  // 初始化 PPT 生成器
+  const pptContainer = document.createElement('div');
+  pptContainer.id = 'ppt-generator-app';
+  document.body.appendChild(pptContainer);
+  createApp(PptGenerator).mount(pptContainer);
 
   // 初始化滚动动效
   useScrollReveal();
