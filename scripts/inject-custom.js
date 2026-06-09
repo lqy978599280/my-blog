@@ -15,16 +15,21 @@ var bodyScripts = '\n  <link rel="stylesheet" href="/my-blog/js/widgets/blog-wid
 
 /**
  * 处理目录中的所有 HTML 文件
+ * 跳过 standaloneDirs 中的独立页面（它们不需要博客 widget）
  */
-function processDir(dir) {
+function processDir(dir, relPath) {
+  relPath = relPath || '';
   var entries = fs.readdirSync(dir, { withFileTypes: true });
 
   for (var i = 0; i < entries.length; i++) {
     var entry = entries[i];
     var fullPath = path.join(dir, entry.name);
+    var entryRel = relPath ? relPath + '/' + entry.name : entry.name;
 
     if (entry.isDirectory()) {
-      processDir(fullPath);
+      // 跳过独立页面目录
+      if (standaloneDirs.indexOf(entry.name) !== -1) continue;
+      processDir(fullPath, entryRel);
     } else if (entry.name.endsWith('.html')) {
       var content = fs.readFileSync(fullPath, 'utf8');
 
@@ -52,11 +57,44 @@ function processDir(dir) {
   }
 }
 
+/**
+ * 将 source 下的独立 HTML 文件直接覆盖到 public（跳过 Hexo 主题渲染）
+ * 在 source/game/ 等目录中放置完整的 HTML 文件，构建时会覆盖 Hexo 生成的版本
+ */
+var standaloneDirs = ['game'];
+
+function copyStandaloneFiles() {
+  var sourceDir = path.join(process.cwd(), 'source');
+  var publicDir = path.join(process.cwd(), 'public');
+
+  for (var i = 0; i < standaloneDirs.length; i++) {
+    var dirName = standaloneDirs[i];
+    var srcDir = path.join(sourceDir, dirName);
+    var destDir = path.join(publicDir, dirName);
+
+    if (!fs.existsSync(srcDir)) continue;
+
+    var entries = fs.readdirSync(srcDir, { withFileTypes: true });
+    for (var j = 0; j < entries.length; j++) {
+      var entry = entries[j];
+      if (!entry.isFile() || !entry.name.endsWith('.html')) continue;
+
+      var srcFile = path.join(srcDir, entry.name);
+      var destFile = path.join(destDir, entry.name);
+      if (fs.existsSync(destFile)) {
+        fs.copyFileSync(srcFile, destFile);
+        console.log('[standalone] Overwrote ' + dirName + '/' + entry.name);
+      }
+    }
+  }
+}
+
 // 仅在直接执行时运行（Hexo 加载时不执行）
 if (require.main === module) {
   var publicDir = path.join(process.cwd(), 'public');
 
   if (fs.existsSync(publicDir)) {
+    copyStandaloneFiles();
     processDir(publicDir);
     console.log('[inject] Vue3 blog widgets injected successfully.');
   } else {

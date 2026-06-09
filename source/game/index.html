@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>惩罚大转盘 - AI探索笔记</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0a1a;
+    --surface: #1a1228;
+    --surface-light: #251d35;
+    --accent: #ff4d6d;
+    --accent-glow: #ff4d6d55;
+    --accent2: #ff758f;
+    --gold: #ffd700;
+    --gold-dim: #b8960f;
+    --text-primary: #f5f0ff;
+    --text-muted: #8a7fa0;
+    --text-dim: #5a5070;
+    --pink-soft: #2d1f3d;
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background:
+      radial-gradient(ellipse at 20% 20%, #3d1a5488 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, #1a0a2a66 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, #ff4d6d08 0%, transparent 70%),
+      var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+  .hearts-bg {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .heart-float {
+    position: absolute; opacity: 0;
+    animation: floatHeart linear infinite;
+    color: var(--accent);
+  }
+  @keyframes floatHeart {
+    0% { opacity: 0; transform: translateY(100vh) scale(0.5) rotate(0deg); }
+    10% { opacity: 0.25; }
+    90% { opacity: 0.08; }
+    100% { opacity: 0; transform: translateY(-10vh) scale(1.2) rotate(45deg); }
+  }
+  .container {
+    position: relative; z-index: 1;
+    max-width: 600px; margin: 0 auto;
+    padding: 30px 20px 60px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .header {
+    text-align: center; margin-bottom: 30px;
+    animation: fadeDown 0.8s ease;
+  }
+  .header-emoji {
+    font-size: 48px; margin-bottom: 8px;
+    filter: drop-shadow(0 0 20px var(--accent-glow));
+  }
+  .header h1 {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 38px;
+    background: linear-gradient(135deg, var(--accent), var(--gold), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; letter-spacing: 4px; margin-bottom: 6px;
+  }
+  .header p {
+    color: var(--text-muted); font-size: 14px;
+    font-weight: 300; letter-spacing: 1px;
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .result-area {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--surface-light);
+    border-radius: var(--radius);
+    margin-bottom: 24px; overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    animation: fadeUp 0.8s ease 0.1s both;
+  }
+  .result-top-bar {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: var(--surface-light);
+    border-bottom: 1px solid #3a2d4a33;
+  }
+  .result-top-bar .label {
+    font-size: 12px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 2px; font-weight: 600;
+  }
+  .result-number {
+    font-size: 12px; color: var(--gold-dim);
+    font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .result-display {
+    min-height: 140px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 30px 24px;
+  }
+  .result-text {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 32px; text-align: center;
+    line-height: 1.5; color: var(--text-primary);
+    transition: all 0.2s; max-width: 100%;
+  }
+  .result-text.rolling {
+    color: var(--accent2);
+    animation: textPulse 0.08s ease infinite alternate;
+  }
+  .result-text.revealed {
+    animation: revealPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: var(--accent);
+    text-shadow: 0 0 30px var(--accent-glow);
+  }
+  @keyframes textPulse {
+    from { opacity: 0.6; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1.02); }
+  }
+  @keyframes revealPop {
+    0% { transform: scale(0.5); opacity: 0; }
+    60% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .idle-text {
+    color: var(--text-dim);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 16px; font-weight: 300; letter-spacing: 1px;
+  }
+  .controls {
+    display: flex; gap: 16px; width: 100%;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+  .btn {
+    flex: 1; padding: 18px 0; border: none;
+    border-radius: var(--radius);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 18px; font-weight: 700;
+    cursor: pointer; transition: all 0.3s ease;
+    position: relative; overflow: hidden; letter-spacing: 2px;
+  }
+  .btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .btn-start {
+    background: linear-gradient(135deg, var(--accent), #e84565);
+    color: white;
+    box-shadow: 0 4px 20px var(--accent-glow);
+  }
+  .btn-start:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px var(--accent-glow), 0 0 0 4px var(--accent-glow);
+  }
+  .btn-start:disabled {
+    background: var(--surface-light); color: var(--text-dim);
+    box-shadow: none; cursor: not-allowed; transform: none;
+  }
+  .btn-stop {
+    background: linear-gradient(135deg, var(--gold), #e6b800);
+    color: #1a1228;
+    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+  }
+  .btn-stop:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(255, 215, 0, 0.3);
+  }
+  .btn-stop:disabled {
+    background: var(--surface-light); color: var(--text-dim);
+    box-shadow: none; cursor: not-allowed; transform: none;
+  }
+  .history-section {
+    width: 100%;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+  .history-title {
+    font-size: 13px; color: var(--text-muted);
+    letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px; font-weight: 600;
+  }
+  .history-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--surface-light);
+  }
+  .history-list {
+    display: flex; flex-direction: column; gap: 8px;
+    max-height: 240px; overflow-y: auto; padding-right: 4px;
+  }
+  .history-list::-webkit-scrollbar { width: 4px; }
+  .history-list::-webkit-scrollbar-track { background: transparent; }
+  .history-list::-webkit-scrollbar-thumb { background: var(--surface-light); border-radius: 4px; }
+  .history-item {
+    background: var(--surface);
+    border: 1px solid var(--surface-light);
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+    animation: slideIn 0.4s ease;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .history-num {
+    width: 28px; height: 28px;
+    background: var(--pink-soft); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: var(--accent); flex-shrink: 0;
+  }
+  .history-text {
+    font-size: 15px; color: var(--text-primary);
+    font-weight: 400; line-height: 1.4;
+  }
+  .empty-history {
+    text-align: center; color: var(--text-dim);
+    font-size: 14px; padding: 20px; font-weight: 300;
+  }
+  .counter-badge {
+    position: fixed; top: 16px; right: 16px;
+    background: var(--surface);
+    border: 1px solid var(--surface-light);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px; color: var(--text-muted);
+    z-index: 10; backdrop-filter: blur(10px);
+    font-weight: 600; letter-spacing: 1px;
+  }
+  .counter-badge span { color: var(--accent); font-weight: 700; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .flash-overlay {
+    position: fixed; inset: 0;
+    background: var(--accent); opacity: 0;
+    pointer-events: none; z-index: 100;
+    transition: opacity 0.1s;
+  }
+  .flash-overlay.active { opacity: 0.15; }
+  .confetti-piece {
+    position: fixed; width: 8px; height: 8px;
+    z-index: 99; pointer-events: none; border-radius: 2px;
+  }
+  @keyframes confettiFall {
+    0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+  }
+  .back-link {
+    position: fixed; top: 16px; left: 16px;
+    background: rgba(17, 24, 39, 0.85);
+    border: 1px solid rgba(0, 240, 255, 0.15);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 13px; color: rgba(255,255,255,0.5);
+    z-index: 10; backdrop-filter: blur(12px);
+    font-weight: 500; letter-spacing: 1px;
+    text-decoration: none;
+    transition: opacity 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+    font-family: 'Sora', 'Noto Sans SC', sans-serif;
+  }
+  .back-link:hover {
+    opacity: 1;
+    color: #00f0ff;
+    border-color: rgba(0, 240, 255, 0.4);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+  }
+  @media (max-width: 480px) {
+    .header h1 { font-size: 30px; }
+    .result-text { font-size: 26px; }
+    .btn { font-size: 16px; padding: 16px 0; }
+    .container { padding: 20px 16px 50px; }
+  }
+</style>
+</head>
+<body>
+
+<a href="/my-blog/" class="back-link">← 返回博客</a>
+<div class="hearts-bg" id="heartsBg"></div>
+<div class="flash-overlay" id="flashOverlay"></div>
+<div class="counter-badge">已抽 <span id="drawCount">0</span> 次</div>
+
+<div class="container">
+  <div class="header">
+    <div class="header-emoji">&#x1F498;</div>
+    <h1>情侣居家惩罚</h1>
+    <p>点击开始，命运降临 · 点击停止，接受惩罚</p>
+  </div>
+
+  <div class="result-area">
+    <div class="result-top-bar">
+      <span class="label">惩罚结果</span>
+      <span class="result-number" id="resultNumber">&mdash;</span>
+    </div>
+    <div class="result-display">
+      <div class="result-text" id="resultText">
+        <span class="idle-text">准备好了吗？点击开始吧</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-start" id="btnStart">&#x1F3B0; 开 始</button>
+    <button class="btn btn-stop" id="btnStop" disabled>&#x1F6D1; 停 止</button>
+  </div>
+
+  <div class="history-section">
+    <div class="history-title">惩罚记录</div>
+    <div class="history-list" id="historyList">
+      <div class="empty-history">还没有抽取记录</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // === 100 items, no curly quotes ===
+  var list = [
+    '做50个深蹲',
+    '唱一首对方指定的歌',
+    '大声说「我错啦」三遍',
+    '给对方按摩10分钟',
+    '做20个俯卧撑',
+    '模仿一种动物叫声',
+    '给对方洗脚',
+    '原地转10圈',
+    '用方言念一段情话',
+    '单脚站立1分钟不许倒',
+    '给对方端一杯水送到面前',
+    '做鬼脸并自拍发朋友圈',
+    '背一首完整的古诗',
+    '夸对方10句不能重复',
+    '即兴表演一段舞蹈',
+    '闭眼走直线5米',
+    '用搞怪声音朗读一段文字',
+    '给对方做一顿饭',
+    '大声唱一首儿歌',
+    '做平板支撑1分钟',
+    '说出对方10个优点',
+    '模仿大猩猩走路绕一圈',
+    '剥一盘水果喂对方吃',
+    '手写一封情书给对方',
+    '做10个波比跳',
+    '对着墙壁说我爱你一分钟不停',
+    '憋笑挑战30秒',
+    '用屁股在空中写自己名字',
+    '即兴表演一段小品',
+    '给对方一个公主抱10秒',
+    '学猫叫撒娇一分钟',
+    '讲一个笑话必须逗笑对方',
+    '做20个蹲起',
+    '给对方剪手指甲',
+    '大声朗读购物清单',
+    '表演吃柠檬的夸张表情',
+    '唱一首完整的儿歌',
+    '用头在空中画圈写字',
+    '给对方做一套眼保健操',
+    '和对方对视30秒不许笑',
+    '提前帮对方暖被窝',
+    '说绕口令三遍不能卡壳',
+    '金鸡独立并喝完一杯水',
+    '帮对方吹头发',
+    '跳一段广场舞',
+    '大声表白一分钟不能停',
+    '用三种语言说我爱你',
+    '做30个开合跳',
+    '被对方弹脑门一下',
+    '给对方揉肩5分钟',
+    '表演一段哑剧2分钟',
+    '模仿对方的招牌动作',
+    '一口气说50个成语不重复',
+    '做一个搞怪表情包并拍照',
+    '帮对方叠好所有衣服',
+    '用说唱的方式念一段话',
+    '给对方捏脚5分钟',
+    '做20个仰卧起坐',
+    '给对方端茶倒水加按摩',
+    '和对方合唱一首情歌',
+    '学机器人走路绕房间一圈',
+    '高抬腿跑30秒',
+    '给对方一个10秒拥抱',
+    '用屁股写数字1到10',
+    '帮对方削一个苹果',
+    '表演大话西游经典台词',
+    '做一个瑜伽动作保持10秒',
+    '模仿对方说话的语气和口头禅',
+    '抱着对方做5个深蹲',
+    '给对方倒一杯奶茶',
+    '故意唱一首跑调的歌',
+    '憋气15秒',
+    '给对方讲一个睡前故事',
+    '闭眼原地踏步30秒',
+    '帮对方系鞋带',
+    '模仿TVB经典台词腔调',
+    '说一段最难的绕口令',
+    '做平板支撑唱完整首歌',
+    '给对方比心10次并说情话',
+    '表演一个小魔术',
+    '用夹子音说话5分钟',
+    '给对方泡一杯咖啡或茶',
+    '假装跳绳100下',
+    '大声喊老公或老婆最棒三遍',
+    '表演千手观音造型',
+    '给对方一个晚安吻',
+    '帮对方捶背100下',
+    '表演天女撒花动作',
+    '被对方用口红画花脸',
+    '看一段恐怖片不许叫出声',
+    '用英文做一段自我介绍',
+    '原地高跳10次',
+    '背对方绕房间走一圈',
+    '表演白雪公主吃毒苹果',
+    '被对方弹耳朵一下',
+    '手握冰块坚持5秒',
+    '发一条朋友圈夸对方',
+    '保持一个可爱表情10秒不许动',
+    '公主抱对方10秒不许掉'
+  ];
+
+  var isRolling = false;
+  var timer = null;
+  var drawCount = 0;
+  var historyItems = [];
+
+  var elText    = document.getElementById('resultText');
+  var elNum     = document.getElementById('resultNumber');
+  var elStart   = document.getElementById('btnStart');
+  var elStop    = document.getElementById('btnStop');
+  var elList    = document.getElementById('historyList');
+  var elCount   = document.getElementById('drawCount');
+  var elFlash   = document.getElementById('flashOverlay');
+
+  // floating hearts
+  (function initHearts(){
+    var bg = document.getElementById('heartsBg');
+    var chars = ['♥','♡','❤','\u{1F495}'];
+    for(var i=0;i<12;i++){
+      var s = document.createElement('span');
+      s.className = 'heart-float';
+      s.textContent = chars[Math.floor(Math.random()*chars.length)];
+      s.style.left = Math.random()*100+'%';
+      s.style.fontSize = (14+Math.random()*16)+'px';
+      s.style.animationDuration = (8+Math.random()*12)+'s';
+      s.style.animationDelay = (Math.random()*10)+'s';
+      bg.appendChild(s);
+    }
+  })();
+
+  function startRolling(){
+    if(isRolling) return;
+    isRolling = true;
+    elStart.disabled = true;
+    elStop.disabled  = false;
+    elText.classList.remove('revealed');
+    elText.classList.add('rolling');
+    roll();
+  }
+
+  function roll(){
+    if(!isRolling) return;
+    var idx = Math.floor(Math.random()*list.length);
+    elText.textContent = list[idx];
+    timer = setTimeout(roll, 60);
+  }
+
+  function stopRolling(){
+    if(!isRolling) return;
+    isRolling = false;
+    clearTimeout(timer);
+    elStart.disabled = false;
+    elStop.disabled  = true;
+    elText.classList.remove('rolling');
+    elText.classList.add('revealed');
+
+    // flash
+    elFlash.classList.add('active');
+    setTimeout(function(){ elFlash.classList.remove('active'); }, 200);
+
+    drawCount++;
+    elCount.textContent = drawCount;
+    elNum.textContent   = '#' + drawCount;
+
+    historyItems.unshift({ text: elText.textContent, num: drawCount });
+    renderHistory();
+    spawnConfetti();
+  }
+
+  function renderHistory(){
+    if(historyItems.length === 0){
+      elList.innerHTML = '<div class="empty-history">还没有抽取记录</div>';
+      return;
+    }
+    var html = '';
+    for(var i=0;i<historyItems.length;i++){
+      var h = historyItems[i];
+      html += '<div class="history-item" style="animation-delay:'+(i*0.05)+'s">'
+            + '<div class="history-num">'+h.num+'</div>'
+            + '<div class="history-text">'+h.text+'</div>'
+            + '</div>';
+    }
+    elList.innerHTML = html;
+  }
+
+  function spawnConfetti(){
+    var colors = ['#ff4d6d','#ffd700','#ff758f','#9b59b6','#ff6b9d','#c44dff'];
+    for(var i=0;i<30;i++){
+      var p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.left = Math.random()*100+'vw';
+      p.style.top  = '-10px';
+      p.style.background = colors[Math.floor(Math.random()*colors.length)];
+      p.style.width  = (4+Math.random()*8)+'px';
+      p.style.height = (4+Math.random()*8)+'px';
+      p.style.borderRadius = Math.random()>0.5?'50%':'2px';
+      p.style.animation = 'confettiFall '+(1+Math.random()*2)+'s ease-out forwards';
+      p.style.animationDelay = Math.random()*0.3+'s';
+      document.body.appendChild(p);
+      (function(el){
+        setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 3500);
+      })(p);
+    }
+  }
+
+  // bind events
+  elStart.addEventListener('click', startRolling);
+  elStop.addEventListener('click', stopRolling);
+  document.addEventListener('keydown', function(e){
+    if(e.code === 'Space'){
+      e.preventDefault();
+      isRolling ? stopRolling() : startRolling();
+    }
+  });
+})();
+</script>
+</body>
+</html>
