@@ -4,6 +4,7 @@ import AiChat from './components/AiChat.vue';
 import SearchPanel from './components/SearchPanel.vue';
 import BackToTop from './components/BackToTop.vue';
 import PptGenerator from './components/PptGenerator.vue';
+import ImageGenerator from './components/ImageGenerator.vue';
 import { useScrollReveal } from './composables/useScrollReveal.js';
 import './styles/global.css';
 
@@ -44,6 +45,12 @@ function initBlogWidgets() {
   pptContainer.id = 'ppt-generator-app';
   document.body.appendChild(pptContainer);
   createApp(PptGenerator).mount(pptContainer);
+
+  // 初始化图片生成器
+  const imgContainer = document.createElement('div');
+  imgContainer.id = 'image-generator-app';
+  document.body.appendChild(imgContainer);
+  createApp(ImageGenerator).mount(imgContainer);
 
   // 初始化滚动动效
   useScrollReveal();
