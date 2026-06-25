@@ -8,18 +8,24 @@ import ImageGenerator from './components/ImageGenerator.vue';
 import { useScrollReveal } from './composables/useScrollReveal.js';
 import './styles/global.css';
 
-/**
- * 初始化博客自定义组件
- * 在 Hexo 生成的静态页面中挂载 Vue3 组件
- */
+// 全局错误兜底，防止任何 widget 错误导致页面白屏崩溃
+window.onerror = function (msg, source, line, col, err) {
+  console.error('[BlogWidget] Global error caught:', msg, source, line, col, err);
+  return true; // 阻止浏览器默认行为（如刷新页面）
+};
+window.addEventListener('unhandledrejection', function (e) {
+  console.error('[BlogWidget] Unhandled promise rejection:', e.reason);
+  e.preventDefault();
+});
+
 function safeMount(Component, containerId) {
   try {
     const container = document.createElement('div');
     container.id = containerId;
     document.body.appendChild(container);
     const app = createApp(Component);
-    app.config.errorHandler = function (err) {
-      console.error('[BlogWidget] Component error in ' + containerId + ':', err);
+    app.config.errorHandler = function (err, vm, info) {
+      console.error('[BlogWidget] Vue error in ' + containerId + ' (' + info + '):', err);
     };
     app.mount(container);
   } catch (err) {
