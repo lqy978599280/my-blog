@@ -12,7 +12,7 @@ categories:
 
 ## 前言
 
-之前我的博客已经集成了两个 AI 功能——聊天助手和 PPT 生成器。最近我发现了一个免费的 AI 图片生成服务：**Agnes AI**，它提供了 Agnes Image 2.1 Flash 模型，支持文生图和图生图，而且价格是 **$0.003/张**，新用户还有免费额度。
+之前我的博客已经集成了两个 AI 功能——聊天助手和 PPT 生成器。最近我发现了一个免费的 AI 图片生成服务：**Agnes AI**，它提供了 Agnes Image 2.1 Flash 模型，支持文生图和图生图，而且**完全免费使用**。
 
 于是我就想：**能不能把这个模型也接入博客？** 这样博客就有了完整的 AI 三件套——聊天、PPT、图片生成。
 
@@ -41,7 +41,7 @@ Agnes Image 2.1 Flash 是 Sapiens AI 推出的图像生成模型，支持文生�
 | 请求方法 | POST |
 | 认证方式 | Bearer Token |
 | 模型名 | `agnes-image-2.1-flash` |
-| 价格 | $0.003/张 |
+| 价格 | 免费 |
 
 ---
 
@@ -51,7 +51,7 @@ Agnes Image 2.1 Flash 是 Sapiens AI 推出的图像生成模型，支持文生�
 
 | 组件 | 方案 | 理由 |
 |------|------|------|
-| AI 模型 | Agnes Image 2.1 Flash | 免费额度，API 兼容 OpenAI 格式 |
+| AI 模型 | Agnes Image 2.1 Flash | 完全免费，API 兼容 OpenAI 格式 |
 | 前端框架 | Vue 3 + Vite | 复用现有博客架构 |
 | 图片下载 | fetch + Blob + ObjectURL | 解决跨域下载问题 |
 
