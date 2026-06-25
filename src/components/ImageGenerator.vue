@@ -173,8 +173,13 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onErrorCaptured } from 'vue';
 import { useImageGenerator } from '../composables/useImageGenerator.js';
+
+onErrorCaptured(function (err) {
+  console.error('[ImageGenerator] Rendering error:', err);
+  return false;
+});
 
 var imageUtil = useImageGenerator();
 var sizeOptions = imageUtil.SIZE_OPTIONS;

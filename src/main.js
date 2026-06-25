@@ -12,48 +12,56 @@ import './styles/global.css';
  * 初始化博客自定义组件
  * 在 Hexo 生成的静态页面中挂载 Vue3 组件
  */
+function safeMount(Component, containerId) {
+  try {
+    const container = document.createElement('div');
+    container.id = containerId;
+    document.body.appendChild(container);
+    const app = createApp(Component);
+    app.config.errorHandler = function (err) {
+      console.error('[BlogWidget] Component error in ' + containerId + ':', err);
+    };
+    app.mount(container);
+  } catch (err) {
+    console.error('[BlogWidget] Failed to mount ' + containerId + ':', err);
+  }
+}
+
 function initBlogWidgets() {
   // 初始化粒子动画
-  const headerEl = document.getElementById('header');
-  if (headerEl) {
-    const particleContainer = document.createElement('div');
-    particleContainer.id = 'particle-canvas-container';
-    headerEl.insertBefore(particleContainer, headerEl.children[1] || null);
-    createApp(ParticleCanvas).mount(particleContainer);
+  try {
+    const headerEl = document.getElementById('header');
+    if (headerEl) {
+      const particleContainer = document.createElement('div');
+      particleContainer.id = 'particle-canvas-container';
+      headerEl.insertBefore(particleContainer, headerEl.children[1] || null);
+      createApp(ParticleCanvas).mount(particleContainer);
+    }
+  } catch (err) {
+    console.error('[BlogWidget] Failed to mount particle-canvas:', err);
   }
 
   // 初始化 AI 聊天组件
-  const chatContainer = document.createElement('div');
-  chatContainer.id = 'ai-chat-app';
-  document.body.appendChild(chatContainer);
-  createApp(AiChat).mount(chatContainer);
+  safeMount(AiChat, 'ai-chat-app');
 
   // 初始化搜索面板
-  const searchContainer = document.createElement('div');
-  searchContainer.id = 'search-panel-app';
-  document.body.appendChild(searchContainer);
-  createApp(SearchPanel).mount(searchContainer);
+  safeMount(SearchPanel, 'search-panel-app');
 
   // 初始化回到顶部按钮
-  const backToTopContainer = document.createElement('div');
-  backToTopContainer.id = 'back-to-top-app';
-  document.body.appendChild(backToTopContainer);
-  createApp(BackToTop).mount(backToTopContainer);
+  safeMount(BackToTop, 'back-to-top-app');
 
   // 初始化 PPT 生成器
-  const pptContainer = document.createElement('div');
-  pptContainer.id = 'ppt-generator-app';
-  document.body.appendChild(pptContainer);
-  createApp(PptGenerator).mount(pptContainer);
+  safeMount(PptGenerator, 'ppt-generator-app');
 
   // 初始化图片生成器
-  const imgContainer = document.createElement('div');
-  imgContainer.id = 'image-generator-app';
-  document.body.appendChild(imgContainer);
-  createApp(ImageGenerator).mount(imgContainer);
+  safeMount(ImageGenerator, 'image-generator-app');
 
   // 初始化滚动动效
-  useScrollReveal();
+  try {
+    useScrollReveal();
+  } catch (err) {
+    console.error('[BlogWidget] Failed to init scroll reveal:', err);
+  }
 }
 
 // 等待 DOM 加载完成后初始化
