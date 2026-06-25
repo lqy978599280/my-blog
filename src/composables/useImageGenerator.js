@@ -4,8 +4,11 @@ var MODEL = 'agnes-image-2.1-flash';
 
 var SIZE_OPTIONS = [
   { label: '1024 × 1024', value: '1024x1024' },
-  { label: '1024 × 1792', value: '1024x1792' },
-  { label: '1792 × 1024', value: '1792x1024' }
+  { label: '1024 × 1792 (竖版)', value: '1024x1792' },
+  { label: '1792 × 1024 (横版)', value: '1792x1024' },
+  { label: '1536 × 1536', value: '1536x1536' },
+  { label: '1536 × 2560 (竖版4K)', value: '1536x2560' },
+  { label: '2560 × 1536 (横版4K)', value: '2560x1536' }
 ];
 
 /**
