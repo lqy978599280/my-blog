@@ -81,7 +81,7 @@
 import { ref, reactive, onMounted, onUnmounted, nextTick } from 'vue';
 
 const API_ENDPOINT = 'https://token-plan-cn.xiaomimimo.com/anthropic/v1/messages';
-const API_KEY = 'tp-ck566wwq6qo6295enlcmm5ud565ej0dcaiw7i5qmw3upl3gp';
+const API_KEY = 'tp-ccxmc1qfwd6kg0ky0jswtfig6sdla47d2uepo2b3yn13278n';
 const MODEL = 'mimo-v2.5-pro';
 
 const isOpen = ref(false);

@@ -5,7 +5,7 @@
 import PptxGenJS from 'pptxgenjs';
 
 var API_ENDPOINT = 'https://token-plan-cn.xiaomimimo.com/anthropic/v1/messages';
-var API_KEY = 'tp-ck566wwq6qo6295enlcmm5ud565ej0dcaiw7i5qmw3upl3gp';
+var API_KEY = 'tp-ccxmc1qfwd6kg0ky0jswtfig6sdla47d2uepo2b3yn13278n';
 var MODEL = 'mimo-v2.5';
 
 var SYSTEM_PROMPT = [
