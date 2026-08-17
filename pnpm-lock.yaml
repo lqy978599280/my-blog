@@ -50,13 +50,13 @@ importers:
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^5.0.0
-        version: 5.2.4(vite@5.4.21(@types/node@22.19.19)(stylus@0.62.0)(terser@5.48.0))(vue@3.5.34)
+        version: 5.2.4(vite@5.4.21(@types/node@22.19.19)(stylus@0.62.0)(terser@5.50.0))(vue@3.5.34)
       terser:
-        specifier: ^5.48.0
-        version: 5.48.0
+        specifier: ^5.50.0
+        version: 5.50.0
       vite:
         specifier: ^5.0.0
-        version: 5.4.21(@types/node@22.19.19)(stylus@0.62.0)(terser@5.48.0)
+        version: 5.4.21(@types/node@22.19.19)(stylus@0.62.0)(terser@5.50.0)
 
 packages:
 
@@ -459,8 +459,8 @@ packages:
     resolution: {integrity: sha512-AO2ac6pjRB3SJmGJo+v5/aK6Omggp6fsLrs6wN9bd35ulu4cCwaAU9+7ZhXjeqHVkaHThLuzH0nZr0YpCDhygg==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
-  acorn@8.16.0:
-    resolution: {integrity: sha512-UVJyE9MttOsBQIDKw1skb9nAwQuR5wuGD3+82K6JgJlm/Y+KI92oNsMNGZCYdDsVtRHSak0pcV5Dno5+4jh9sw==}
+  acorn@8.18.0:
+    resolution: {integrity: sha512-lGq+9yr1/GuAWaVYIHRjvvySG5/4VfKIvC8EWxStPdcDh/Ka7FG3twP6v4d5BkravUilhIAsG4Qj83t02LWUPQ==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -1299,8 +1299,8 @@ packages:
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
 
-  terser@5.48.0:
-    resolution: {integrity: sha512-J/9An6vs9Us6wKRriSFXBWdRZapREHqFzdNUKk0pmu804EMR6dr6winwo7e5JDxN4xahxQsuysyYFwlwj4XN/Q==}
+  terser@5.50.0:
+    resolution: {integrity: sha512-CN9BVxWhgS/hRxtUMjtC2uRWSTcSfQFHMDWma6sKKfIivCD91sM+FOPfvwoaRMqCSrUpe1nv3jDamd9eEQ4y+w==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -1667,9 +1667,9 @@ snapshots:
   '@types/trusted-types@2.0.7':
     optional: true
 
-  '@vitejs/plugin-vue@5.2.4(vite@5.4.21(@types/node@22.19.19)(stylus@0.62.0)(terser@5.48.0))(vue@3.5.34)':
+  '@vitejs/plugin-vue@5.2.4(vite@5.4.21(@types/node@22.19.19)(stylus@0.62.0)(terser@5.50.0))(vue@3.5.34)':
     dependencies:
-      vite: 5.4.21(@types/node@22.19.19)(stylus@0.62.0)(terser@5.48.0)
+      vite: 5.4.21(@types/node@22.19.19)(stylus@0.62.0)(terser@5.50.0)
       vue: 3.5.34
 
   '@vue/compiler-core@3.5.34':
@@ -1732,7 +1732,7 @@ snapshots:
 
   abbrev@3.0.1: {}
 
-  acorn@8.16.0: {}
+  acorn@8.18.0: {}
 
   agent-base@7.1.4: {}
 
@@ -2685,10 +2685,10 @@ snapshots:
 
   symbol-tree@3.2.4: {}
 
-  terser@5.48.0:
+  terser@5.50.0:
     dependencies:
       '@jridgewell/source-map': 0.3.11
-      acorn: 8.16.0
+      acorn: 8.18.0
       commander: 2.20.3
       source-map-support: 0.5.21
 
@@ -2732,7 +2732,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@5.4.21(@types/node@22.19.19)(stylus@0.62.0)(terser@5.48.0):
+  vite@5.4.21(@types/node@22.19.19)(stylus@0.62.0)(terser@5.50.0):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.5.15
@@ -2741,7 +2741,7 @@ snapshots:
       '@types/node': 22.19.19
       fsevents: 2.3.3
       stylus: 0.62.0
-      terser: 5.48.0
+      terser: 5.50.0
 
   vue@3.5.34:
     dependencies:
